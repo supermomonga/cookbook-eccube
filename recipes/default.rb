@@ -15,9 +15,9 @@ include_recipe "php::module_mysql"
 include_recipe "apache2::mod_php5"
 
 if node.has_key?("ec2")
-    server_fqdn = node['ec2']['public_hostname']
+  server_fqdn = node['ec2']['public_hostname']
 else
-    server_fqdn = node['fqdn']
+  server_fqdn = node['fqdn']
 end
 
 node.set_unless['eccube']['db']['password'] = secure_password
@@ -41,21 +41,35 @@ end
 
 execute "untar-eccube" do
   cwd node["eccube"]["dir"]
-  command "tar --strip-components 1 -xzf #{Chef::Config[:file_cache_path]}/eccube-#{node['wordpress']['version']}.tar.gz"
+  command "tar --strip-components 1 -xzf #{Chef::Config[:file_cache_path]}/eccube-#{node['eccube']['version']}.tar.gz"
 end
 
-execute "mysql-install-eccube-privileges"
+execute "mysql-install-eccube-privileges" do
+  command "/usr/bin/mysql -u root -p\"#{node['mysql']['server_root_password']}\" grant all privileges on #{node['eccube']['db']['database']}.* to #{node['eccube']['db']['user']}@localhost"
+  action :nothing
+end
 
-execute "create #{node["eccube"]["db"]["database"]} database"
-
-unless Chef::Config[:solo]
-  ruby_block "save node data" do
-    block do
-      node.save
-    end
-    action :create
+execute "create #{node["eccube"]["db"]["database"]} database" do
+  command "/usr/bin/mysqladmin -u root -p\"#{node['mysql']['server_root_password']}\" create #{node['eccube']['db']['database']}"
+  not_if do
+    # Make sure gem is detected if it was just installed earlier in this recipe
+    require 'rubygems'
+    Gem.clear_paths
+    require 'mysql'
+    m = Mysql.new("localhost", "root", node['mysql']['server_root_password'])
+    m.list_dbs.include?(node['eccube']['db']['database'])
   end
+  notifies :create, "ruby_block[save node data]", :immediately unless Chef::Config[:solo]
 end
+
+# unless Chef::Config[:solo]
+#   ruby_block "save node data" do
+#     block do
+#       node.save
+#     end
+#     action :create
+#   end
+# end
 
 apache_site "000-default" do
   enable false

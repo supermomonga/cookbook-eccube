@@ -1,14 +1,14 @@
 <VirtualHost *:80>
   ServerName <%= @params[:server_name] %>
-  ServerAliases <% @params[:server_aliases].each do |a| %><%= a %> <% end %>
-  DocumentRoot <%= @params[:rocroot] %>
+  ServerAlias <% @params[:server_aliases].each do |a| %><%= a %> <% end %>
+  DocumentRoot <%= @params[:docroot] %>/html
 
   <Directory <%= @params[:docroot] %>>
     Options FollowSymLinks
-    AllowOverdide FileInfo Options
+    AllowOverride FileInfo Options
     Order allow,deny
     Allow from all
-  </Diretory>
+  </Directory>
 
   <Directory / >
     Options FollowSymLinks

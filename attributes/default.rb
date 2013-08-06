@@ -4,4 +4,4 @@ default["eccube"]["repourl"] = "http://downloads.ec-cube.net/src/"
 default["eccube"]["dir"] = "/var/www/eccube"
 default["eccube"]["db"]["database"] = "eccubedb"
 default["eccube"]["db"]["user"] = "eccubeuser"
-default["eccube"]["servera_aliases"] = [node["fqdn"]]
+default["eccube"]["server_aliases"] = [node["fqdn"]]

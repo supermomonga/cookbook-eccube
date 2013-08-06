@@ -9,12 +9,11 @@ Vagrant.configure("2") do |config|
   config.vm.hostname = "cookbook-eccube-berkshelf"
 
   # Every Vagrant virtual environment requires a box to build off of.
-  # config.vm.box = "Berkshelf-CentOS-6.3-x86_64-minimal"
-  config.vm.box = "centos"
+  config.vm.box = "Berkshelf-CentOS-6.3-x86_64-minimal"
 
   # The url from where the 'config.vm.box' box will be fetched if it
   # doesn't already exist on the user's system.
-  # config.vm.box_url = "https://dl.dropbox.com/u/31081437/Berkshelf-CentOS-6.3-x86_64-minimal.box"
+  config.vm.box_url = "https://dl.dropbox.com/u/31081437/Berkshelf-CentOS-6.3-x86_64-minimal.box"
 
   # Assign this VM to a host-only network IP, allowing you to access it
   # via the IP. Host-only networks can talk to the host machine as well as
@@ -31,6 +30,8 @@ Vagrant.configure("2") do |config|
   # Create a forwarded port mapping which allows access to a specific port
   # within the machine from a port on the host machine. In the example below,
   # accessing "localhost:8080" will access port 80 on the guest machine.
+
+  config.vm.network :forwarded_port, guest: 80, host: 8080
 
   # Share an additional folder to the guest VM. The first argument is
   # the path on the host to the actual folder. The second argument is
