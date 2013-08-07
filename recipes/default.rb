@@ -55,8 +55,21 @@ execute "untar-eccube" do
 end
 
 execute "mysql-install-eccube-privileges" do
-  command "/usr/bin/mysql -u root -p\"#{node['mysql']['server_root_password']}\" grant all privileges on #{node['eccube']['db']['database']}.* to #{node['eccube']['db']['user']}@localhost"
+  command "/usr/bin/mysql -u root -p\"#{node['mysql']['server_root_password']}\" <  #{node['eccube']['conf_dir']}/grants.sql"
   action :nothing
+end
+
+template "#{node['eccube']['conf_dir']}/grants.sql" do
+  source "grants.sql.erb"
+  owner "root"
+  group "root"
+  mode "0600"
+  variables(
+    :user     => node['eccube']['db']['user'],
+    :password => node['eccube']['db']['password'],
+    :database => node['eccube']['db']['database']
+  )
+  notifies :run, "execute[mysql-install-eccube-privileges]", :immediately
 end
 
 execute "create #{node["eccube"]["db"]["database"]} database" do
