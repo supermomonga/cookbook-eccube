@@ -1,19 +1,13 @@
-execute "config" do
-  command "/usr/bin/mysql -u root -p\"#{node['mysql']['server_root_password']}\" <  #{node['eccube']['dir']}/grants.sql"
-  action :nothing
-end
-
-template "#{node['eccube']['dir']}/grants.sql" do
-  source "grants.sql.erb"
+template "#{node['eccube']['dir']}/data/config/config.php" do
+  source "config.php.erb"
   owner "root"
   group "root"
-  mode "0600"
+  mode "0666"
   variables(
-    :user     => node['eccube']['db']['user'],
-    :password => node['eccube']['db']['password'],
-    :database => node['eccube']['db']['database']
+    :hostname   => node['fqdn'],
+    :dbname     => node['eccube']['db']['database'],
+    :dbuser     => node['eccube']['db']['user'],
+    :dbpassword => node['eccube']['db']['password'],
+    :auth_magic => 'eccubeauthmagic'
   )
-  notifies :run, "execute[mysql-install-eccube-privileges]", :immediately
 end
-
-

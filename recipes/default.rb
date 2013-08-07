@@ -45,46 +45,6 @@ execute "mysql-install-eccube-privileges" do
   action :nothing
 end
 
-template "#{node['eccube']['dir']}/grants.sql" do
-  source "grants.sql.erb"
-  owner "root"
-  group "root"
-  mode "0600"
-  variables(
-    :user     => node['eccube']['db']['user'],
-    :password => node['eccube']['db']['password'],
-    :database => node['eccube']['db']['database']
-  )
-  notifies :run, "execute[mysql-install-eccube-privileges]", :immediately
-end
-
-execute "create #{node["eccube"]["db"]["database"]} database" do
-  command "/usr/bin/mysqladmin -u root -p\"#{node['mysql']['server_root_password']}\" create #{node['eccube']['db']['database']}"
-  not_if do
-    # Make sure gem is detected if it was just installed earlier in this recipe
-    require 'rubygems'
-    Gem.clear_paths
-    require 'mysql'
-    m = Mysql.new("localhost", "root", node['mysql']['server_root_password'])
-    m.list_dbs.include?(node['eccube']['db']['database'])
-  end
-  notifies :create, "ruby_block[save node data]", :immediately unless Chef::Config[:solo]
-end
-
-template "#{node['eccube']['dir']}/data/config/config.php" do
-  source "config.php.erb"
-  owner "root"
-  group "root"
-  mode "0666"
-  variables(
-    :hostname   => node['fqdn'],
-    :dbname     => node['eccube']['db']['database'],
-    :dbuser     => node['eccube']['db']['user'],
-    :dbpassword => node['eccube']['db']['password'],
-    :auth_magic => 'eccubeauthmagic'
-  )
-end
-
 apache_site "000-default" do
   enable false
 end
