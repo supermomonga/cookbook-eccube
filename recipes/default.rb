@@ -71,15 +71,6 @@ execute "create #{node["eccube"]["db"]["database"]} database" do
   notifies :create, "ruby_block[save node data]", :immediately unless Chef::Config[:solo]
 end
 
-# unless Chef::Config[:solo]
-#   ruby_block "save node data" do
-#     block do
-#       node.save
-#     end
-#     action :create
-#   end
-# end
-
 apache_site "000-default" do
   enable false
 end
@@ -89,12 +80,5 @@ web_app "eccube" do
   docroot node["eccube"]["dir"]
   server_name server_fqdn
   server_aliases node["eccube"]["server_aliases"]
-end
-
-
-require 'json'
-
-file "/tmp/dna.json" do
-  content JSON.pretty_generate(node)
 end
 
