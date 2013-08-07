@@ -82,7 +82,8 @@ Vagrant.configure("2") do |config|
     }
 
     chef.run_list = [
-        "recipe[cookbook-eccube::default]"
+        "recipe[cookbook-eccube::default]",
+        "recipe[cookbook-eccube::http_access]"
     ]
   end
 end

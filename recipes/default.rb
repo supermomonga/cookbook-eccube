@@ -9,20 +9,10 @@
 
 include_recipe "apache2"
 include_recipe "mysql::server"
+include_recipe "mysql::ruby"
 include_recipe "php"
 include_recipe "php::module_mysql"
 include_recipe "apache2::mod_php5"
-
-default['php']['directives'] = { "date.timezone" => "Asia/Tokyo" }
-
-case node["platform_family"]
-when 'rhel', 'fedora'
-  if node['platform_version'].to_f < 6 then
-    default['php']['packages'] = ['php53', 'php53-devel', 'php53-cli', 'php53-mbstring', 'php-pear']
-  else
-    default['php']['packages'] = ['php', 'php-devel', 'php-cli', 'php-mbstring', 'php-pear']
-  end
-end
 
 if node.has_key?("ec2")
   server_fqdn = node['ec2']['public_hostname']
@@ -31,10 +21,6 @@ else
 end
 
 node.set_unless['eccube']['db']['password'] = secure_password
-# node.set_unless['eccube']['keys']['auth'] = secure_password
-# node.set_unless['eccube']['keys']['secure_auth'] = secure_password
-# node.set_unless['eccube']['keys']['logged_in'] = secure_password
-# node.set_unless['eccube']['keys']['nonce'] = secure_password
 
 remote_file "#{Chef::Config[:file_cache_path]}/eccube-#{node['eccube']['version']}.tar.gz" do
   source "#{node['eccube']['repourl']}/eccube-#{node['eccube']['version']}.tar.gz"
@@ -55,11 +41,11 @@ execute "untar-eccube" do
 end
 
 execute "mysql-install-eccube-privileges" do
-  command "/usr/bin/mysql -u root -p\"#{node['mysql']['server_root_password']}\" <  #{node['eccube']['conf_dir']}/grants.sql"
+  command "/usr/bin/mysql -u root -p\"#{node['mysql']['server_root_password']}\" <  #{node['eccube']['dir']}/grants.sql"
   action :nothing
 end
 
-template "#{node['eccube']['conf_dir']}/grants.sql" do
+template "#{node['eccube']['dir']}/grants.sql" do
   source "grants.sql.erb"
   owner "root"
   group "root"
@@ -104,3 +90,11 @@ web_app "eccube" do
   server_name server_fqdn
   server_aliases node["eccube"]["server_aliases"]
 end
+
+
+require 'json'
+
+file "/tmp/dna.json" do
+  content JSON.pretty_generate(node)
+end
+
