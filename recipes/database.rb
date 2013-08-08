@@ -1,4 +1,14 @@
-template "#{node['eccube']['dir']}/grants.sql" do
+include_recipe "mysql::server"
+include_recipe "mysql::ruby"
+
+node.set_unless['eccube']['db']['password'] = secure_password
+
+execute "mysql-install-eccube-privileges" do
+  command "/usr/bin/mysql -u root -p\"#{node['mysql']['server_root_password']}\" <  /tmp/eccube-grants.sql"
+  action :nothing
+end
+
+template "/tmp/eccube-grants.sql" do
   source "grants.sql.erb"
   owner "root"
   group "root"

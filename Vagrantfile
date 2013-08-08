@@ -78,13 +78,17 @@ Vagrant.configure("2") do |config|
         :server_root_password => 'rootpass',
         :server_debian_password => 'debpass',
         :server_repl_password => 'replpass'
+      },
+      :eccube => {
+        :hostname => 'localhost:8080'
       }
     }
 
     chef.run_list = [
         "recipe[cookbook-eccube::default]",
         "recipe[cookbook-eccube::database]",
-        "recipe[cookbook-eccube::http_access]"
+        "recipe[cookbook-eccube::install]",
+        "recipe[cookbook-eccube::http_access]",
     ]
   end
 end
