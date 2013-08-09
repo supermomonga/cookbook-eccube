@@ -1,13 +1,21 @@
-# cookbook-eccube cookbook
+# EC-CUBE cookbook
 
-# Requirements
+## Requirements
 
-# Usage
+* apache2
+* php
+* mysql
 
-# Attributes
+## Usage
 
-# Recipes
+## Attributes
 
-# Author
+## Recipes
 
-Author:: YOUR_NAME (<YOUR_EMAIL>)
+* eccube::default
+* eccube::database
+* eccube::install
+
+## Author
+
+Author:: Eido NABESHIMA (<closer009@gmail.com>)
