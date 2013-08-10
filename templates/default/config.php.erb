@@ -1,19 +1,19 @@
 <?php
 define('ECCUBE_INSTALL', 'ON');
-define('HTTP_URL', 'http://<%= @hostname %>/');
-define('HTTPS_URL', 'http://<%= @hostname %>/');
+define('HTTP_URL', 'http://<%= node["eccube"]["hostname"] %>/');
+define('HTTPS_URL', 'http://<%= node["eccube"]["hostname"] %>/');
 define('ROOT_URLPATH', '/');
 define('DOMAIN_NAME', '');
 define('DB_TYPE', 'mysql');
-define('DB_USER', '<%= @dbuser %>');
-define('DB_PASSWORD', '<%= @dbpassword %>');
-define('DB_SERVER', '<%= @dbhost %>');
-define('DB_NAME', '<%= @dbname %>');
+define('DB_USER', '<%= node["eccube"]["db"]["user"] %>');
+define('DB_PASSWORD', '<%= node["eccube"]["db"]["password"]  %>');
+define('DB_SERVER', '<%= node["eccube"]["db"]["hostname"] %>');
+define('DB_NAME', '<%= node["eccube"]["db"]["database"] %>');
 define('DB_PORT', '');
 define('ADMIN_DIR', 'admin/');
 define('ADMIN_FORCE_SSL', FALSE);
 define('ADMIN_ALLOW_HOSTS', 'a:0:{}');
-define('AUTH_MAGIC', '<%= @auth_magic %>');
+define('AUTH_MAGIC', '<%= node["eccube"]["auth_magick"] %>');
 define('PASSWORD_HASH_ALGOS', 'sha256');
 define('MAIL_BACKEND', 'mail');
 define('SMTP_HOST', '');
