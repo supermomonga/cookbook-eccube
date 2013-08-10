@@ -1,4 +1,4 @@
-name             'cookbook-eccube'
+name             'eccube'
 maintainer       'Eido NABESHIMA'
 maintainer_email 'closer009@gmail.com'
 license          'All rights reserved'

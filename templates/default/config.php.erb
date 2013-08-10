@@ -10,7 +10,7 @@ define('DB_PASSWORD', '<%= node["eccube"]["db"]["password"]  %>');
 define('DB_SERVER', '<%= node["eccube"]["db"]["hostname"] %>');
 define('DB_NAME', '<%= node["eccube"]["db"]["database"] %>');
 define('DB_PORT', '');
-define('ADMIN_DIR', 'admin/');
+define('ADMIN_DIR', '<%= node["eccube"]["admin_dir"] %>/');
 define('ADMIN_FORCE_SSL', FALSE);
 define('ADMIN_ALLOW_HOSTS', 'a:0:{}');
 define('AUTH_MAGIC', '<%= node["eccube"]["auth_magick"] %>');

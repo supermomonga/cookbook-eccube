@@ -16,6 +16,7 @@ default["eccube"]["dir"] = "/var/www/eccube"
 default["eccube"]["hostname"] = node["fqdn"]
 default["eccube"]["shop_name"] = "Chef Shop"
 default["eccube"]["admin_mail"] = "test@example.com"
+default["eccube"]["admin_dir"] = "admin"
 default["eccube"]["login_id"] = "admin"
 default["eccube"]["login_pass"] = "admin"
 default["eccube"]["db_skip"] = ""
