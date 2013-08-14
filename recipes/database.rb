@@ -5,6 +5,7 @@ node.set_unless['eccube']['db']['password'] = secure_password
 
 execute "mysql-install-eccube-privileges" do
   command "/usr/bin/mysql -u root -p\"#{node['mysql']['server_root_password']}\" <  /tmp/eccube-grants.sql"
+  not_if { ::File.exists? "#{node['eccube']['dir']}/data/config/config.php" }
   action :nothing
 end
 
