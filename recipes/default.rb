@@ -34,6 +34,7 @@ end
 execute "untar-eccube" do
   cwd node["eccube"]["dir"]
   command "tar --strip-components 1 -xzf #{Chef::Config[:file_cache_path]}/eccube-#{node['eccube']['version']}.tar.gz"
+  not_if { ::File.exists? node["eccube"]["dir"] }
 end
 
 apache_site "000-default" do
